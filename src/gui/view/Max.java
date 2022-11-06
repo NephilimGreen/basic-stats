@@ -10,14 +10,14 @@ import model.BasicStatsModel;
 /**
  * The Numbers View is a visualization of the number of inputs the user has entered.
  */
-public class Mean implements View
+public class Max implements View
 {
     private JPanel panel;
     private JLabel label;
-    private JTextField jtfMean;
+    private JTextField jtfMax;
 
     /**
-     * Creates a new JPanel, loads it with a JLabel containing "Mean:", then a read-only JTextField.
+     * Creates a new JPanel, loads it with a JLabel containing "Max:", then a read-only JTextField.
      * 
      * @return The created JPanel.
      */
@@ -25,28 +25,28 @@ public class Mean implements View
     public Container make()
     {
         panel = new JPanel();
-        label = new JLabel("Mean:");
-        jtfMean = new JTextField(5);
-	    jtfMean.setEditable(false);
+        label = new JLabel("Max:");
+        jtfMax = new JTextField(5);
+	    jtfMax.setEditable(false);
         panel.add(label);
-        panel.add(jtfMean);
+        panel.add(jtfMax);
         return panel;
     }
 
     /**
-     * Updates this View to represent the mean of the values in the model.
+     * Updates this View to represent the maximum value in the model.
      *
      * @param model The current BasicStatsModel to be visualized
      */
     @Override
     public void update(BasicStatsModel model)
     {
-        if(model.getArrayDouble().length == 0) {jtfMean.setText("");}
+        if(model.getArrayDouble().length == 0) {jtfMax.setText("");}
         else
         {
             double num = 0.0;
-            if(model.getArrayDouble().length > 0) {num = BasicStats.mean(model.getArrayDouble());}
-            jtfMean.setText("" + num);
+            if(model.getArrayDouble().length > 0) {num = BasicStats.max(model.getArrayDouble());}
+            jtfMax.setText("" + num);
         }
     }
 }

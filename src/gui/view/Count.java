@@ -40,6 +40,7 @@ public class Count implements View
     @Override
     public void update(BasicStatsModel model)
     {
-        jtfCount.setText("" + model.getArrayDouble().length);
+        if(model.getArrayDouble().length == 0) {jtfCount.setText("");}
+        else{jtfCount.setText("" + model.getArrayDouble().length);}
     }
 }

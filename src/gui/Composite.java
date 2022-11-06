@@ -59,7 +59,8 @@ public class Composite implements Component
         components.add(new Count());
         components.add(new Median());
         components.add(new Mean());
-        MIDDLE_ENDDEX = 5;  // INCLUSIVE
+        components.add(new Max());
+        MIDDLE_ENDDEX = 6;  // INCLUSIVE
         components.add(new NumbersList());  // Must be updated after Enter
 
         //Initialize the Window

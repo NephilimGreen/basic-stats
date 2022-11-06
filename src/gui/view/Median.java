@@ -41,8 +41,12 @@ public class Median implements View
     @Override
     public void update(BasicStatsModel model)
     {
-        double num = 0.0;
-        if(model.getArrayDouble().length > 0) {num = BasicStats.median(model.getArrayDouble());}
-        jtfMedian.setText("" + num);
+        if(model.getArrayDouble().length == 0) {jtfMedian.setText("");}
+        else
+        {
+            double num = 0.0;
+            if(model.getArrayDouble().length > 0) {num = BasicStats.median(model.getArrayDouble());}
+            jtfMedian.setText("" + num);
+        }
     }
 }

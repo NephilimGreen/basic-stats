@@ -50,7 +50,7 @@ public class NumbersList implements View
             jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length() - 2));
         }
 
-        if(!model.lastUpdateReasonIsAdd) {jtfList.setText(BasicStatsModel.RESET_MESSAGE);}
+        if(!model.lastUpdateReasonIsAdd) {jtfList.setText("");}  //jtfList.setText(BasicStatsModel.RESET_MESSAGE);}
         else if(model.failedAdd)
         {
             if(model.getArrayDouble().length > 0) {jtfList.append(", ");}
