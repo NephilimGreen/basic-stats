@@ -1,10 +1,9 @@
-import gui.BasicStatsGUI;
+import gui.Composite;
 
 public class BasicStatsApp {
     
     public static void main(String ... args) {
-	BasicStatsGUI gui = new BasicStatsGUI();
-	gui.show();
+	new Composite();
     }
 
 }

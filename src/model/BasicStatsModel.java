@@ -11,6 +11,11 @@ public class BasicStatsModel
 {
     // Store all collected numbers
     private ArrayList<Double> data = new ArrayList<Double>();
+    public boolean lastUpdateReasonIsAdd = false;  // Can be changed to other type if more update reasons added.
+                                                   // Currently referenced in Composite, Enter, Add, Reset, and NumbersList.
+    public boolean failedAdd = false;
+    public static final String IMPROPER_ADD_MESSAGE = "Must enter a proper decimal number!";
+    public static final String RESET_MESSAGE = "List reset!";
     
     
     public BasicStatsModel() {
