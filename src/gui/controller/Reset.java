@@ -3,14 +3,19 @@ package gui.controller;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EnumMap;
 
 import javax.swing.JButton;
 
 import gui.Composite;
+import gui.Composite.Element;
 import model.BasicStatsModel;
 
 public class Reset implements Controller
 {
+    private boolean made = false;
+    private int updated = 0;
+
     JButton button;
     BasicStatsModel model;
     Composite composite;
@@ -44,9 +49,11 @@ public class Reset implements Controller
 			public void actionPerformed(ActionEvent e) {
 				model.lastUpdateReasonIsAdd = false;
 
-				composite.update(model);
+				composite.update();
 			}
 			});
+        
+        made =  true;
         return button;
     }
 
@@ -57,7 +64,25 @@ public class Reset implements Controller
      * @param model The current BasicStatsModel to be worked in.
      */
     @Override
-    public void update(BasicStatsModel model)
+    public void update()
     { 
+        if(made)
+        {
+            updated += 1;
+        }
+    }
+
+    /**
+     * Returns <updated, the JButton> if testingMode is on.
+     * @return Enumerated map of names:Objects
+     * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
+     */
+    @Override
+    public EnumMap<Element, Object> getElements() throws IllegalAccessException {
+        if(!model.testingMode) {throw new IllegalAccessException("Testing mode is not on!");}
+        EnumMap<Element, Object> rets = new EnumMap<>(Element.class);
+        rets.put(Element.UPDATEDCOUNT, updated);
+        rets.put(Element.RESETBUTTON, button);
+        return rets;
     }
 }

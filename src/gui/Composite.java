@@ -22,8 +22,48 @@ import gui.view.*;
  */
 public class Composite implements Component
 {
+    public static enum Element
+    {
+        MODEL,          // BasicStatsModel
+        UPDATEDCOUNT,   // int
+        JFMAIN,         // JFrame
+        ENTER,          // Controller
+        ENTERFIELD,     // JTextField
+        ADD,            // Controller
+        ADDBUTTON,      // JButton
+        RESET,          // Controller
+        RESETBUTTON,    // JButton
+        COUNT,          // View
+        COUNTLABEL,     // JLabel
+        COUNTFIELD,     // JTextField
+        MEDIAN,         // View
+        MEDIANLABEL,    // JLabel
+        MEDIANFIELD,    // JTextField
+        MEAN,           // View
+        MEANLABEL,      // JLabel
+        MEANFIELD,      // JTextField
+        MAX,            // View
+        MAXLABEL,       // JLabel
+        MAXFIELD,       // JTextField
+        NUMBERSLIST,    // View
+        NUMBERSLISTAREA // JTextArea
+    }
+
+    public static final Collection<Element> COMPONENT_KEYS = new ArrayList<>(Arrays.asList(new Element[]
+                                                            {Element.ENTER, Element.ADD, Element.RESET, Element.COUNT,
+                                                             Element.MEDIAN, Element.MEAN, Element.MAX, Element.NUMBERSLIST}));
+    public static final Collection<Element> JTEXTCOMPONENT_KEYS = new ArrayList<>(Arrays.asList(new Element[]
+                                                                 {Element.ENTERFIELD, Element.COUNTFIELD, Element.MEDIANFIELD,
+                                                                  Element.MEANFIELD, Element.MAXFIELD, Element.NUMBERSLISTAREA}));
+
+    private boolean thisMade = false;
+    private int updated = 0;
+
+    public boolean show;
+    private boolean shown = false;
+
     private static final String APP_TITLE = "Simple stats";;
-    private static BasicStatsModel model = new BasicStatsModel();
+    private static BasicStatsModel model;
 	private List<Component> components = new ArrayList<>();  // Must add items to this in order they are to be displayed.
 	private static int TOP_ENDDEX;  // Last index (inclusive) of the elements in components to be added to the top section of the window.
 	private static int MIDDLE_ENDDEX;  // Last index (inclusive) of the elements in components to be added to the middle section of the window.
@@ -31,11 +71,13 @@ public class Composite implements Component
     
     public Composite()
     {
-        new Composite(true);
+        new Composite(true, true, false);
     }
 
-    public Composite(boolean make)
+    public Composite(boolean make, boolean showWhenMake, boolean testingMode)
     {
+        show = showWhenMake;
+        model = new BasicStatsModel(testingMode);
         if(make) {make();}
     }
 
@@ -47,21 +89,23 @@ public class Composite implements Component
      */
     @Override
     public Container make() {
+        model.reset();
+
         //Use these if any Components need to have make() called out of order.
         List<Integer> alreadyMade = new ArrayList<>();
         List<Container> made = new ArrayList<>();
 
         //Populate list of Components
-        components.add(new Enter());
+        components.add(new Enter(model));
         components.add(new Add(model, this));
         components.add(new Reset(model, this));
         TOP_ENDDEX = 2;  // INCLUSIVE
-        components.add(new Count());
-        components.add(new Median());
-        components.add(new Mean());
-        components.add(new Max());
+        components.add(new Count(model));
+        components.add(new Median(model));
+        components.add(new Mean(model));
+        components.add(new Max(model));
         MIDDLE_ENDDEX = 6;  // INCLUSIVE
-        components.add(new NumbersList());  // Must be updated after Enter
+        components.add(new NumbersList(model));  // Must be updated after Enter
 
         //Initialize the Window
         jfMain = new JFrame(APP_TITLE);
@@ -105,9 +149,14 @@ public class Composite implements Component
 
 		jfMain.getContentPane().add(jpBottom, BorderLayout.SOUTH);
 
-        //Show the Window
-        jfMain.setVisible(true);
+        //Show the Window now if set to do so
+        if(show) 
+        {
+            jfMain.setVisible(true);
+            shown = true;
+        }
 
+        thisMade = true;
         return jfMain;
     }
 
@@ -117,13 +166,61 @@ public class Composite implements Component
      * @param model The current BasicStatsModel to be worked in.
      */
     @Override
-    public void update(BasicStatsModel model)
+    public void update()
     {
-        if(!model.lastUpdateReasonIsAdd) {model.reset();}
-        for(Component component : components)
+        if(thisMade)
         {
-            component.update(model);
+            updated += 1;
+
+            if(show && !shown)
+            {
+                jfMain.setVisible(true);
+                shown = true;
+            }
+
+            if(!model.lastUpdateReasonIsAdd) {model.reset();}
+            for(Component component : components)
+            {
+                component.update();
+            }
         }
+    }
+
+    /**
+     * Returns <updated, the BasicStatsModel, the JFrame,
+     *          subordinate Component 0, subordinate 0's getElements() mappings except UPDATEDCOUNT,
+     *          subordinate Component 1, ...>
+     * if testingMode is on. Does not include subordinate stuff if make() has not been called either internally or externally.
+     * @return Enumerated map of names:Objects
+     * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
+     */
+    @Override
+    public EnumMap<Element, Object> getElements() throws IllegalAccessException {
+        if(!model.testingMode) {throw new IllegalAccessException("Testing mode is not on!");}
+        EnumMap<Element, Object> rets = new EnumMap<>(Element.class);
+        rets.put(Element.MODEL, model);
+        rets.put(Element.JFMAIN, jfMain);
+        if(thisMade)
+        {
+            rets.put(Element.ENTER, components.get(0));
+            rets.putAll(components.get(0).getElements());
+            rets.put(Element.ADD, components.get(1));
+            rets.putAll(components.get(1).getElements());
+            rets.put(Element.RESET, components.get(2));
+            rets.putAll(components.get(2).getElements());
+            rets.put(Element.COUNT, components.get(3));
+            rets.putAll(components.get(3).getElements());
+            rets.put(Element.MEDIAN, components.get(4));
+            rets.putAll(components.get(4).getElements());
+            rets.put(Element.MEAN, components.get(5));
+            rets.putAll(components.get(5).getElements());
+            rets.put(Element.MAX, components.get(6));
+            rets.putAll(components.get(6).getElements());
+            rets.put(Element.NUMBERSLIST, components.get(7));
+            rets.putAll(components.get(7).getElements());
+        }
+        rets.put(Element.UPDATEDCOUNT, updated);  // MUST ALWAYS BE AFTER SUBORDINATE COMPONENTS (they also have this key)
+        return rets;
     }
     
 }

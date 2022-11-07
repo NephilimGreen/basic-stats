@@ -9,6 +9,8 @@ import java.util.ArrayList;
  */
 public class BasicStatsModel
 {
+    public final boolean testingMode;
+
     // Store all collected numbers
     private ArrayList<Double> data = new ArrayList<Double>();
     public boolean lastUpdateReasonIsAdd = false;  // Can be changed to other type if more update reasons added.
@@ -18,8 +20,15 @@ public class BasicStatsModel
     public static final String RESET_MESSAGE = "List reset!";
     
     
-    public BasicStatsModel() {
-	super();
+    public BasicStatsModel()
+    {
+        super();
+        testingMode = false;
+    }
+
+    public BasicStatsModel(boolean test) {
+        super();
+        testingMode = test;
     }
 
     /**

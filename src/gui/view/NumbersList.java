@@ -1,8 +1,11 @@
 package gui.view;
 
 import java.awt.*;
+import java.util.EnumMap;
+
 import javax.swing.*;
 
+import gui.Composite.Element;
 import model.BasicStatsModel;
 
 /**
@@ -10,7 +13,17 @@ import model.BasicStatsModel;
  */
 public class NumbersList implements View
 {
+    private boolean made = false;
+    private int updated = 0;
+
+    private final BasicStatsModel model;
+
     private JTextArea jtfList;
+
+    public NumbersList(BasicStatsModel mod)
+    {
+        model = mod;
+    }
 
     /**
      * Creates a read-only JTextArea.
@@ -23,6 +36,8 @@ public class NumbersList implements View
         jtfList = new JTextArea(10, 50);
 	    jtfList.setEditable(false);
         jtfList.setText("");
+
+        made = true;
         return jtfList;
     }
 
@@ -32,35 +47,54 @@ public class NumbersList implements View
      * @param model The current BasicStatsModel to be visualized
      */
     @Override
-    public void update(BasicStatsModel model)
+    public void update()
     {
-        if(jtfList.getText().endsWith(BasicStatsModel.IMPROPER_ADD_MESSAGE))
+        if(made)
         {
-            jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length()
-                                                                        - BasicStatsModel.IMPROPER_ADD_MESSAGE.length()));
-        }
-        else if(jtfList.getText().endsWith(BasicStatsModel.RESET_MESSAGE))
-        {
-            jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length()
-                                                                        - BasicStatsModel.RESET_MESSAGE.length()));
-        }
+            updated += 1;
 
-        if(jtfList.getText().endsWith(", "))
-        {
-            jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length() - 2));
-        }
+            if(jtfList.getText().endsWith(BasicStatsModel.IMPROPER_ADD_MESSAGE))
+            {
+                jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length()
+                                                                            - BasicStatsModel.IMPROPER_ADD_MESSAGE.length()));
+            }
+            else if(jtfList.getText().endsWith(BasicStatsModel.RESET_MESSAGE))
+            {
+                jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length()
+                                                                            - BasicStatsModel.RESET_MESSAGE.length()));
+            }
 
-        if(!model.lastUpdateReasonIsAdd) {jtfList.setText("");}  //jtfList.setText(BasicStatsModel.RESET_MESSAGE);}
-        else if(model.failedAdd)
-        {
-            if(model.getArrayDouble().length > 0) {jtfList.append(", ");}
-            jtfList.append(BasicStatsModel.IMPROPER_ADD_MESSAGE);
-            model.failedAdd = false;
+            if(jtfList.getText().endsWith(", "))
+            {
+                jtfList.setText(jtfList.getText().substring(0, jtfList.getText().length() - 2));
+            }
+
+            if(!model.lastUpdateReasonIsAdd) {jtfList.setText("");}  //jtfList.setText(BasicStatsModel.RESET_MESSAGE);}
+            else if(model.failedAdd)
+            {
+                if(model.getArrayDouble().length > 0) {jtfList.append(", ");}
+                jtfList.append(BasicStatsModel.IMPROPER_ADD_MESSAGE);
+                model.failedAdd = false;
+            }
+            else
+            {
+                if(model.getArrayDouble().length > 1) {jtfList.append(", ");}
+                jtfList.append("" + model.getArrayDouble()[model.getArrayDouble().length - 1]);
+            }
         }
-        else
-        {
-            if(model.getArrayDouble().length > 1) {jtfList.append(", ");}
-            jtfList.append("" + model.getArrayDouble()[model.getArrayDouble().length - 1]);
-        }
+    }
+
+    /**
+     * Returns <updated, the JTextArea> if testingMode is on.
+     * @return Enumerated map of names:Objects
+     * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
+     */
+    @Override
+    public EnumMap<Element, Object> getElements() throws IllegalAccessException {
+        if(!model.testingMode) {throw new IllegalAccessException("Testing mode is not on!");}
+        EnumMap<Element, Object> rets = new EnumMap<>(Element.class);
+        rets.put(Element.UPDATEDCOUNT, updated);
+        rets.put(Element.NUMBERSLISTAREA, jtfList);
+        return rets;
     }
 }

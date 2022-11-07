@@ -1,8 +1,9 @@
 package gui;
 
 import java.awt.*;
+import java.util.EnumMap;
 
-import model.BasicStatsModel;
+import gui.Composite.Element;
 
 public interface Component
 {
@@ -19,5 +20,12 @@ public interface Component
      *
      * @param model The current BasicStatsModel to be worked in.
      */
-    public void update(BasicStatsModel model);
+    public void update();
+
+    /**
+     * Returns atomic Containers and Components in this Component
+     * @return Enumerated map of names:Objects
+     * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
+     */
+    public EnumMap<Element, Object> getElements() throws IllegalAccessException;
 }
