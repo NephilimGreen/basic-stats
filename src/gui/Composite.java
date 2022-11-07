@@ -162,8 +162,6 @@ public class Composite implements Component
 
     /**
      * Updates this and all the other Components to represent the current status of the BasicStatsModel.
-     *
-     * @param model The current BasicStatsModel to be worked in.
      */
     @Override
     public void update()
@@ -187,9 +185,9 @@ public class Composite implements Component
     }
 
     /**
-     * Returns <updated, the BasicStatsModel, the JFrame,
+     * Returns {updated, the BasicStatsModel, the JFrame,
      *          subordinate Component 0, subordinate 0's getElements() mappings except UPDATEDCOUNT,
-     *          subordinate Component 1, ...>
+     *          subordinate Component 1, ...}
      * if testingMode is on. Does not include subordinate stuff if make() has not been called either internally or externally.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false

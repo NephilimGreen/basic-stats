@@ -43,8 +43,6 @@ public class NumbersList implements View
 
     /**
      * Updates this View to show a list of the values currently in the model, along with any feedback messages for the user.
-     *
-     * @param model The current BasicStatsModel to be visualized
      */
     @Override
     public void update()
@@ -85,7 +83,7 @@ public class NumbersList implements View
     }
 
     /**
-     * Returns <updated, the JTextArea> if testingMode is on.
+     * Returns {updated, the JTextArea} if testingMode is on.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
      */

@@ -17,8 +17,6 @@ public interface Component
 
     /**
      * Updates this Component to represent the current status of the BasicStatsModel.
-     *
-     * @param model The current BasicStatsModel to be worked in.
      */
     public void update();
 

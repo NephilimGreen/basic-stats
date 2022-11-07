@@ -50,8 +50,6 @@ public class Mean implements View
 
     /**
      * Updates this View to represent the mean of the values in the model.
-     *
-     * @param model The current BasicStatsModel to be visualized
      */
     @Override
     public void update()
@@ -70,7 +68,7 @@ public class Mean implements View
     }
 
     /**
-     * Returns <updated, the JLabel, the JTextField> if testingMode is on.
+     * Returns {updated, the JLabel, the JTextField} if testingMode is on.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
      */

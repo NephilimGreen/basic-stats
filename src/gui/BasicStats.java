@@ -14,8 +14,9 @@ public class BasicStats {
     /**
      * Compute the maximum of an array of numbers.
      */
-    public static double max(double ... numbers)
+    public static double max(double ... numbers) throws IllegalArgumentException
     {
+      if(numbers.length < 1) {throw new IllegalArgumentException("Can't find maximum of empty array.");}
       double max = Double.NEGATIVE_INFINITY;
       for (double num : numbers)
       {

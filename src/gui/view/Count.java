@@ -49,8 +49,6 @@ public class Count implements View
 
     /**
      * Updates the JTextField to represent the number of values in the model.
-     *
-     * @param model The current BasicStatsModel to be visualized
      */
     @Override
     public void update()
@@ -65,7 +63,7 @@ public class Count implements View
     }
 
     /**
-     * Returns <updated, the JLabel, the JTextField> if testingMode is on.
+     * Returns {updated, the JLabel, the JTextField} if testingMode is on.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
      */

@@ -183,11 +183,19 @@ public class BasicStatsTest {
     public void testMax()
     {
       double[] numbersEmpty = {};
-      double max = BasicStats.max(numbersEmpty);
-      assertEquals(Double.NEGATIVE_INFINITY, max, EPS);  // max() returns NEGATIVE_INFINITY if passed an empty list (i.e. no max)
+      boolean threw = false;
+      try
+      {
+        BasicStats.max(numbersEmpty);
+      }
+      catch(IllegalArgumentException e)
+      {
+        threw = true;
+      }
+      assertTrue(threw);  // max() throws IllegalArgumentException if passed an empty list
 
       double[] numbersPopulated = {3, 5, 1, 2, 4};
-      max = BasicStats.max(numbersPopulated);
+      double max = BasicStats.max(numbersPopulated);
       assertEquals(5, max, EPS);
 
       double[] numbersDecimal = {1.5, 4.5, 2.5, 0.5, 4.50000001, 2.1};
@@ -232,5 +240,20 @@ public class BasicStatsTest {
         fail("getElements() returned IllegalAccessException");
       }
       assertEquals(populatedTexts + " populated texts", 0, populatedTexts);
+    }
+
+    @Test
+    public void testTestingMode()
+    {
+      boolean threw = false;
+      try
+      {
+        (new Composite(true, false, false)).getElements();
+      }
+      catch(IllegalAccessException e)
+      {
+        threw = true;
+      }
+      assertTrue(threw);
     }
 }

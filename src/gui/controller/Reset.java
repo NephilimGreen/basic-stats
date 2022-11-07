@@ -59,9 +59,6 @@ public class Reset implements Controller
 
     /**
      * Updates this Component to represent the current status of the BasicStatsModel.
-     * Currently does nothing.
-     *
-     * @param model The current BasicStatsModel to be worked in.
      */
     @Override
     public void update()
@@ -73,7 +70,7 @@ public class Reset implements Controller
     }
 
     /**
-     * Returns <updated, the JButton> if testingMode is on.
+     * Returns {updated, the JButton} if testingMode is on.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
      */

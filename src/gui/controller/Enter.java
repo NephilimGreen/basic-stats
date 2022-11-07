@@ -37,8 +37,6 @@ public class Enter implements Controller
 
     /**
      * Clears the entered value. Adds it to the model if possible.
-     *
-     * @param model The current BasicStatsModel to be worked in.
      */
     @Override
     public void update()
@@ -57,7 +55,7 @@ public class Enter implements Controller
     }
 
     /**
-     * Returns <updated, the JTextField> if testingMode is on.
+     * Returns {updated, the JTextField} if testingMode is on.
      * @return Enumerated map of names:Objects
      * @throws IllegalAccessException if the BasicStatsModel's testingMode == false
      */
