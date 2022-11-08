@@ -139,7 +139,7 @@ public class BasicStatsTest {
     }
 
     @Test
-    public void testAddNumber()
+    public void testAddNumberSuccess()
     {
       Composite composite = new Composite(true, false, true);
 
@@ -160,8 +160,15 @@ public class BasicStatsTest {
       }
       assertEquals("After adding \"1\", numbers list displays: " + numbers, "1.0", numbers);
       assertEquals("After adding \"1\", enter field displays: " + enterAfter, "", enterAfter);
+    }
 
-      composite.make();
+    @Test
+    public void testAddNumberFails()
+    {
+      Composite composite = new Composite(true, false, true);
+
+      String numbers = "";
+      String enterAfter = "";
       try
       {
         EnumMap<Element, Object> elements = composite.getElements();
@@ -180,7 +187,7 @@ public class BasicStatsTest {
     }
 
     @Test
-    public void testMax()
+    public void testMaxFail()
     {
       double[] numbersEmpty = {};
       boolean threw = false;
@@ -192,15 +199,23 @@ public class BasicStatsTest {
       {
         threw = true;
       }
-      assertTrue(threw);  // max() throws IllegalArgumentException if passed an empty list
+      assertTrue(threw);
+    }
 
-      double[] numbersPopulated = {3, 5, 1, 2, 4};
+    @Test
+    public void testMaxSuccess()
+    {
+      double[] numbersPopulated = {3, 5, 1, 2, 4, -6};
       double max = BasicStats.max(numbersPopulated);
       assertEquals(5, max, EPS);
 
-      double[] numbersDecimal = {1.5, 4.5, 2.5, 0.5, 4.50000001, 2.1};
+      double[] numbersDecimal = {-4.50000002, 1.5, 4.5, 2.5, 0.5, 4.50000001, 2.1};
       max = BasicStats.max(numbersDecimal);
       assertEquals(4.50000001, max, EPS);
+
+      double[] numbersNegative = {-2, -3, -4, -99, -1, -2};
+      max = BasicStats.max(numbersNegative);
+      assertEquals(-1, max, EPS);
     }
 
     @Test
@@ -225,6 +240,7 @@ public class BasicStatsTest {
         ((JTextComponent)elements.get(Element.ENTERFIELD)).setText("one");
         ((BasicStatsModel)elements.get(Element.MODEL)).lastUpdateReasonIsAdd = true;
         composite.update();
+        ((JTextComponent)elements.get(Element.ENTERFIELD)).setText("ERASEEEEEEEEEEEE!");
 
         ((BasicStatsModel)elements.get(Element.MODEL)).lastUpdateReasonIsAdd = false;
         composite.update();
@@ -243,7 +259,7 @@ public class BasicStatsTest {
     }
 
     @Test
-    public void testTestingMode()
+    public void testTestingModeFail()
     {
       boolean threw = false;
       try
@@ -255,5 +271,44 @@ public class BasicStatsTest {
         threw = true;
       }
       assertTrue(threw);
+    }
+
+    @Test
+    public void testCount()
+    {
+      Composite composite = new Composite(true, false, true);
+
+      String count1 = null;
+      String count2 = null;
+      String count3 = null;
+      String count4 = null;
+      try
+      {
+        EnumMap<Element, Object> elements = composite.getElements();
+        count1 = ((JTextComponent)elements.get(Element.COUNTFIELD)).getText();
+        ((JTextComponent)elements.get(Element.ENTERFIELD)).setText("1");
+        ((BasicStatsModel)elements.get(Element.MODEL)).lastUpdateReasonIsAdd = true;
+        composite.update();
+        count2 = ((JTextComponent)elements.get(Element.COUNTFIELD)).getText();
+        for(int i = 0; i < 10000; i++)
+        {
+          ((JTextComponent)elements.get(Element.ENTERFIELD)).setText("" + i);
+          ((BasicStatsModel)elements.get(Element.MODEL)).lastUpdateReasonIsAdd = true;
+          composite.update();
+        }
+        count3 = ((JTextComponent)elements.get(Element.COUNTFIELD)).getText();
+
+        ((BasicStatsModel)elements.get(Element.MODEL)).lastUpdateReasonIsAdd = false;
+        composite.update();
+        count4 = ((JTextComponent)elements.get(Element.COUNTFIELD)).getText();
+      }
+      catch(IllegalAccessException e)
+      {
+        fail("getElements() returned IllegalAccessException");
+      }
+      assertEquals("Count 1 is " + count1, "", count1);
+      assertEquals("Count 2 is " + count2, "1", count2);
+      assertEquals("Count 3 is " + count3, "10001", count3);
+      assertEquals("Count 4 is " + count4, "", count4);
     }
 }
